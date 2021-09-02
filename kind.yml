@@ -1,0 +1,33 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  disableDefaultCNI: true
+nodes:
+- role: control-plane
+  extraMounts:
+  - hostPath: ./audit
+    containerPath: /etc/kubernetes/audit/
+    readOnly: false
+    selinuxRelabel: false
+    propagation: None
+  - hostPath: /dev/
+    containerPath: /host/dev
+    readOnly: true
+    selinuxRelabel: false
+    propagation: None
+kubeadmConfigPatches:
+- |
+  apiVersion: kubeadm.k8s.io/v1beta2
+  kind: ClusterConfiguration
+  metadata:
+    name: config
+  apiServer:
+    extraArgs:
+      audit-log-path: /etc/kubernetes/audit/audit.log
+      audit-policy-file: /etc/kubernetes/audit/audit-policy.yml
+    extraVolumes:
+    - name: audit
+      hostPath: /etc/kubernetes/audit
+      mountPath: /etc/kubernetes/audit
+      readOnly: false
+      pathType: "DirectoryOrCreate"

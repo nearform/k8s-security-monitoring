@@ -1,0 +1,15 @@
+apiVersion: crd.projectcalico.org/v1
+kind: GlobalNetworkPolicy
+metadata:
+  name: log-all
+spec:
+  selector: all()
+  types:
+    - Ingress
+    - Egress
+  ingress:
+    - action: Log
+    - action: Allow
+  egress:
+    - action: Log
+    - action: Allow
