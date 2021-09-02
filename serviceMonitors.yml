@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: falco-exporter
+  namespace: falco
+spec:
+  endpoints:
+  - interval: 3s
+    port: "metrics"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: falco-exporter
+  namespaceSelector: {}
